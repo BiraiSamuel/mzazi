@@ -1,0 +1,41 @@
+{
+  "expo": {
+    "name": "MzaziApp",
+    "slug": "appDoctor",
+    "version": "1.2.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.bundi.appDoctor"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FFFFFF"
+      },
+      "package": "com.bundi.appDoctor"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "description": "Mzazi App",
+    "githubUrl": "https://github.com/BiraiSamuel/mzazi",
+    "extra": {
+      "eas": {
+        "projectId": "02bcf37a-3dc0-4e5e-a305-742465efd60b"
+      }
+    }
+  }
+}
