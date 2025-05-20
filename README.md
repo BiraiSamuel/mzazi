@@ -1,6 +1,6 @@
-# Doctor App - React Native
+# Mzazi App - React Native
 
-Mobile application project created with Expo, React Native, Firebase and some wonderful libraries for React Native application.
+Mobile application project created with Expo, React Native, Firebase and some wonderful libraries for React Native application such as react-native-android-voice.
 
 ## Table of Contents
 
@@ -36,6 +36,7 @@ This Doctor Mobile application allows customers to create their account for heal
 - Search doctor, filter by First Name and Last Name
 - Book an appointment with the doctor by choosing time and select one meeting option. There are 3 options for meeting with the doctor: Audio Chat, Video Conference, Contact Meeting.
 - Check the booking in the Appointment Screen
+- Speech to Text tranlation for consultation
 
 ## Technologies
 
@@ -49,6 +50,7 @@ This Doctor Mobile application allows customers to create their account for heal
 - Radio Button React Native V1
 - Firebase Authentication V8
 - Firebase Realtime Database
+- React Native Android Voice
 
 ## Quick Start
 
@@ -57,7 +59,7 @@ Here are some steps to run this project:
 1. Clone the project
 
 ```
-git@github.com:AnhCaooo/App-Doctor.git
+git@github.com:BiraiSamuel/mzazi.git
 ```
 
 2. Download node_modules
