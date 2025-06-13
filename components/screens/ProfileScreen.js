@@ -1,194 +1,185 @@
 import React from "react";
-import { StyleSheet, View, Text, ScrollView,TouchableOpacity, Image} from "react-native";
-import { Avatar, Button } from "react-native-elements";
+import {
+  StyleSheet,
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+  SafeAreaView,
+} from "react-native";
+import { Button } from "react-native-elements";
 import { auth } from "../../firebase";
 
 export default function ProfileScreen({ navigation }) {
   const handleSignOut = () => {
     auth
       .signOut()
-      .then(() => {
-        navigation.navigate("LoginScreen");
-      })
+      .then(() => navigation.navigate("LoginScreen"))
       .catch((err) => alert(err.message));
   };
 
   return (
-    <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>User Profile</Text>
-      </View>
-      <View style={styles.profileContainer}>
-        <Image
-          source={{ uri: 'https://bootdey.com/img/Content/avatar/avatar6.png' }} // Replace with actual image URL
-          style={styles.profileImage}
-        />
-        <Text style={styles.profileName}>{auth.currentUser?.email} </Text>
-        <Text style={styles.profileAge}>20-30 Years Old</Text>
-        <TouchableOpacity style={styles.friendButton}>
-          <Text style={styles.friendButtonText}>Become Friend</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.matchButton}>
-          <Text style={styles.matchButtonText}>Invite to Team Match</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.infoContainer}>
-        <Text style={styles.infoTitle}>User info</Text>
-        <View style={styles.infoRow}>
-          <Text style={styles.infoLabel}>Bio</Text>
-          <Text style={styles.infoValue}>Hey there, I'm on Atlatik</Text>
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.header}>
+          <Text style={styles.headerTitle}>👩‍🍼 Mother's Profile</Text>
         </View>
-        <View style={styles.infoRow}>
-          <Text style={styles.infoLabel}>Age</Text>
-          <Text style={styles.infoValue}>20-30 Years Old</Text>
+
+        <View style={styles.profileCard}>
+          <Image
+            source={{
+              uri: "https://bootdey.com/img/Content/avatar/avatar6.png",
+            }}
+            style={styles.profileImage}
+          />
+          <Text style={styles.profileName}>
+            {auth.currentUser?.email || "Anonymous"}
+          </Text>
+          <Text style={styles.profileSubtitle}>Pregnancy Stage: 2nd Trimester</Text>
         </View>
-        <View style={styles.infoRow}>
-          <Text style={styles.infoLabel}>Gender</Text>
-          <Text style={styles.infoValue}>N/A</Text>
+
+        <View style={styles.sectionCard}>
+          <Text style={styles.sectionTitle}>📋 Personal Info</Text>
+          {renderInfoRow("Email", auth.currentUser?.email)}
+          {renderInfoRow("Age Group", "20-30 years")}
+          {renderInfoRow("Gender", "Female")}
+          {renderInfoRow("Joined", "March 4, 2023")}
+          {renderInfoRow("Location", "Alger, Canada")}
         </View>
-        <View style={styles.infoRow}>
-          <Text style={styles.infoLabel}>Joined</Text>
-          <Text style={styles.infoValue}>March 04, 2023</Text>
-        </View>
-        <View style={styles.infoRow}>
-          <Text style={styles.infoLabel}>Location</Text>
-          <Text style={styles.infoValue}>Alger, Canada</Text>
-        </View>
-        <View style={styles.infoRow}>
-          <Text style={styles.infoLabel}>Reviews</Text>
-          <View style={styles.ratingContainer}>
-            {Array.from({ length: 5 }).map((_, index) => (
-              <Text key={index} style={styles.star}>
-                {index < 3 ? '★' : '☆'}
+
+        <View style={styles.sectionCard}>
+          <Text style={styles.sectionTitle}>⭐ Reviews</Text>
+          <View style={styles.ratingRow}>
+            {Array.from({ length: 5 }).map((_, i) => (
+              <Text key={i} style={styles.star}>
+                {i < 3 ? "★" : "☆"}
               </Text>
             ))}
+            <Text style={styles.reviewText}> (240 reviews)</Text>
           </View>
         </View>
-      </View>
-      <Text style={styles.textContainer}>{auth.currentUser?.email} </Text>
 
-      <Button
-        type="solid"
-        containerStyle={styles.containerStyle}
-        buttonStyle={styles.buttonContainer}
-        titleStyle={{ color: "black", fontSize: 18 }}
-        title="Log Out"
-        onPress={handleSignOut}
-      />
+        <Button
+          title="Log Out"
+          onPress={handleSignOut}
+          buttonStyle={styles.logoutButton}
+          titleStyle={styles.logoutButtonTitle}
+          containerStyle={styles.logoutButtonContainer}
+        />
       </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+function renderInfoRow(label, value) {
+  return (
+    <View style={styles.infoRow}>
+      <Text style={styles.infoLabel}>{label}</Text>
+      <Text style={styles.infoValue}>{value || "—"}</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: "column",
-    justifyContent: "center",
+  safeArea: {
+    flex: 1,
+    backgroundColor: "#FAFAFA",
+  },
+  scrollContainer: {
     alignItems: "center",
-    //backgroundColor: "white",
-  },
-  avatarStyle: {
-    borderWidth: 1,
-    borderColor: "#A9A9A9",
-    borderWidth: 1,
-  },
-  textContainer: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  containerStyle: {
-    marginHorizontal: 50,
-    marginVertical: 20,
-    width: 160,
-  },
-  buttonContainer: {
-    backgroundColor: "white",
-    borderColor: "#A9A9A9",
-    borderWidth: 1,
-    borderRadius: 10,
+    padding: 20,
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
-  headerButton: {
-    fontSize: 24,
+    marginBottom: 20,
   },
   headerTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#2C3E50",
   },
-  profileContainer: {
-    alignItems: 'center',
+  profileCard: {
+    alignItems: "center",
+    backgroundColor: "#fff",
     padding: 20,
+    borderRadius: 12,
+    width: "100%",
+    shadowColor: "#000",
+    shadowOpacity: 0.05,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 2,
+    marginBottom: 20,
   },
   profileImage: {
     width: 100,
     height: 100,
     borderRadius: 50,
-    marginBottom: 10,
+    marginBottom: 12,
   },
   profileName: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: 20,
+    fontWeight: "600",
+    color: "#34495E",
   },
-  profileAge: {
+  profileSubtitle: {
     fontSize: 16,
-    color: '#888',
+    color: "#7F8C8D",
+    marginTop: 4,
+  },
+  sectionCard: {
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    width: "100%",
+    padding: 16,
     marginBottom: 20,
+    shadowColor: "#000",
+    shadowOpacity: 0.05,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 2,
   },
-  friendButton: {
-    backgroundColor: '#E5FFE5',
-    paddingVertical: 10,
-    paddingHorizontal: 30,
-    borderRadius: 5,
-    marginBottom: 10,
-  },
-  friendButtonText: {
-    color: '#2ECC71',
-    fontSize: 16,
-  },
-  matchButton: {
-    backgroundColor: '#2ECC71',
-    paddingVertical: 10,
-    paddingHorizontal: 30,
-    borderRadius: 5,
-  },
-  matchButtonText: {
-    color: '#fff',
-    fontSize: 16,
-  },
-  infoContainer: {
-    padding: 20,
-    backgroundColor: '#F5F5F5',
-    borderRadius: 10,
-    margin: 20,
-  },
-  infoTitle: {
+  sectionTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10,
+    fontWeight: "bold",
+    marginBottom: 12,
+    color: "#2C3E50",
   },
   infoRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginBottom: 10,
   },
   infoLabel: {
     fontSize: 16,
-    color: '#888',
+    color: "#95A5A6",
   },
   infoValue: {
     fontSize: 16,
+    color: "#2C3E50",
   },
-  ratingContainer: {
-    flexDirection: 'row',
+  ratingRow: {
+    flexDirection: "row",
+    alignItems: "center",
   },
   star: {
+    fontSize: 20,
+    color: "#FFD700",
+    marginRight: 2,
+  },
+  reviewText: {
     fontSize: 16,
-    color: '#FFD700',
+    color: "#7F8C8D",
+    marginLeft: 8,
+  },
+  logoutButton: {
+    backgroundColor: "#FF6B6B",
+    borderRadius: 10,
+  },
+  logoutButtonTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  logoutButtonContainer: {
+    width: "60%",
+    alignSelf: "center",
   },
 });

@@ -1,24 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View,Platform,Text,SafeAreaView,ScrollView,Dimensions, FlatList } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  SafeAreaView,
+  ScrollView,
+  Dimensions,
+  Platform,
+} from "react-native";
 import { auth, db } from "../../firebase";
 import {
-  CardOne,
   CardTwo,
-  CardThree,
-  CardFour,
-  CardFive,
-  CardSix,
-  CardSeven,
-  CardEight,
-  CardNine,
-  CardTen,
-  CardEleven,
   CardTwelve,
-  CardEcomOne,
-  CardEcomTwo,
-  CardEcomThree,
-  CardEcomFour
+  CardEight,
 } from "react-native-card-ui";
+
+const screenWidth = Dimensions.get("window").width;
 
 function AppointmentScreen({ navigation }) {
   const [appointments, setAppointments] = useState([]);
@@ -31,110 +28,83 @@ function AppointmentScreen({ navigation }) {
     const appointmentRef = db.ref("appointments/" + auth.currentUser?.uid);
     appointmentRef.on("value", (snapshot) => {
       const data = snapshot.val();
-      // setAppointments(Object.values(data));
+      // Uncomment below when your Firebase is ready
+      // if (data) setAppointments(Object.values(data));
     });
   };
 
   return (
-    <View style={styles.container}>
-      <SafeAreaView style={styles.container}>
-        <ScrollView>
-          <CardTwo
-            title={"Stretch Mark prevention"}
-            subTitle={"Creams Oils & Tips"}
-            profile={{
-              uri:
-                "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.amritapuri.org%2Fphotos%2F05-babies%2Fbaby300.jpg&f=1&nofb=1&ipt=6269e5871666a2ab19c58772d79fb1c30491aa441e253bc9434b014cd28e47bc&ipo=images"
-            }}
-            image={{
-              uri:
-                "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.amritapuri.org%2Fphotos%2F05-babies%2Fbaby300.jpg&f=1&nofb=1&ipt=6269e5871666a2ab19c58772d79fb1c30491aa441e253bc9434b014cd28e47bc&ipo=images"
-            }}
-            icon={"star"}
-            iconColor={"yellow"}
-          />
-          <CardTwo
-            title={"Maternity Clothing"}
-            subTitle={"Comfortable & Stylish options"}
-            profile={{
-              uri:
-                "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.amritapuri.org%2Fphotos%2F05-babies%2Fbaby300.jpg&f=1&nofb=1&ipt=6269e5871666a2ab19c58772d79fb1c30491aa441e253bc9434b014cd28e47bc&ipo=images"
-            }}
-            image={{
-              uri:
-                "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.amritapuri.org%2Fphotos%2F05-babies%2Fbaby300.jpg&f=1&nofb=1&ipt=6269e5871666a2ab19c58772d79fb1c30491aa441e253bc9434b014cd28e47bc&ipo=images"
-            }}
-            icon={"star"}
-            iconColor={"yellow"}
-          />
-          <CardTwo
-            title={"Skin care"}
-            subTitle={"Pregnancy Safe Beauty"}
-            profile={{
-              uri:
-                "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.amritapuri.org%2Fphotos%2F05-babies%2Fbaby300.jpg&f=1&nofb=1&ipt=6269e5871666a2ab19c58772d79fb1c30491aa441e253bc9434b014cd28e47bc&ipo=images"
-            }}
-            image={{
-              uri:
-                "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.amritapuri.org%2Fphotos%2F05-babies%2Fbaby300.jpg&f=1&nofb=1&ipt=6269e5871666a2ab19c58772d79fb1c30491aa441e253bc9434b014cd28e47bc&ipo=images"
-            }}
-            icon={"star"}
-            iconColor={"grey"}
-          />
-          <CardTwelve
-            image={{
-              uri:
-                "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.amritapuri.org%2Fphotos%2F05-babies%2Fbaby300.jpg&f=1&nofb=1&ipt=6269e5871666a2ab19c58772d79fb1c30491aa441e253bc9434b014cd28e47bc&ipo=images"
-            }}
-            title={"Baby's Growth Diary"}
-            subTitle={"What to expect and do"}
-            viewProgress={true}
-            progress={2}
-          />                  
-                            <CardEight
-                              image1={{
-                                uri:
-                                  "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftudungsicomel.com%2Fwp-content%2Fuploads%2F2022%2F08%2Fcara-cuci-uri.png&f=1&nofb=1&ipt=2752f67e1eccd79caa4c7ef1824a810c2653240b56838805abc5d98716f5f74f&ipo=images"
-                              }}
-                              image2={{
-                                uri:
-                                  "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftudungsicomel.com%2Fwp-content%2Fuploads%2F2022%2F08%2Fcara-cuci-uri.png&f=1&nofb=1&ipt=2752f67e1eccd79caa4c7ef1824a810c2653240b56838805abc5d98716f5f74f&ipo=images"
-                              }}
-                              image3={{
-                                uri: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftudungsicomel.com%2Fwp-content%2Fuploads%2F2022%2F08%2Fcara-cuci-uri.png&f=1&nofb=1&ipt=2752f67e1eccd79caa4c7ef1824a810c2653240b56838805abc5d98716f5f74f&ipo=images"
-                              }}
-                            />
-        </ScrollView>
-        {/*this.state.people.map((item, i) => <Text key={i}>{item.name} </Text>)*/}
-      </SafeAreaView>
-    </View>
+    <SafeAreaView style={styles.safeContainer}>
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <Text style={styles.header}>🧘 Maternal Wellness & Self-Care</Text>
+
+        <CardTwo
+          title="Stretch Mark Prevention"
+          subTitle="Creams, Oils & Tips"
+          profile={{ uri: "https://www.amritapuri.org/photos/05-babies/baby300.jpg" }}
+          image={{ uri: "https://www.amritapuri.org/photos/05-babies/baby300.jpg" }}
+          icon="star"
+          iconColor="yellow"
+        />
+
+        <CardTwo
+          title="Maternity Clothing"
+          subTitle="Comfortable & Stylish Options"
+          profile={{ uri: "https://www.amritapuri.org/photos/05-babies/baby300.jpg" }}
+          image={{ uri: "https://www.amritapuri.org/photos/05-babies/baby300.jpg" }}
+          icon="star"
+          iconColor="yellow"
+        />
+
+        <CardTwo
+          title="Skin Care"
+          subTitle="Pregnancy-Safe Beauty"
+          profile={{ uri: "https://www.amritapuri.org/photos/05-babies/baby300.jpg" }}
+          image={{ uri: "https://www.amritapuri.org/photos/05-babies/baby300.jpg" }}
+          icon="star"
+          iconColor="grey"
+        />
+
+        <Text style={styles.header}>👶 Baby's Growth & Learning</Text>
+
+        <CardTwelve
+          image={{ uri: "https://www.amritapuri.org/photos/05-babies/baby300.jpg" }}
+          title="Baby's Growth Diary"
+          subTitle="What to expect and do"
+          viewProgress
+          progress={2}
+        />
+
+        <CardEight
+          image1={{ uri: "https://tudungsicomel.com/wp-content/uploads/2022/08/cara-cuci-uri.png" }}
+          image2={{ uri: "https://tudungsicomel.com/wp-content/uploads/2022/08/cara-cuci-uri.png" }}
+          image3={{ uri: "https://tudungsicomel.com/wp-content/uploads/2022/08/cara-cuci-uri.png" }}
+        />
+
+        {/* Placeholder for Appointments */}
+        {/* Future: List appointments from Firebase */}
+        {/* appointments.length > 0 ? appointments.map(... */}
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 export default AppointmentScreen;
 
 const styles = StyleSheet.create({
-  container: {
+  safeContainer: {
     flex: 1,
+    backgroundColor: "#fff",
+  },
+  scrollContent: {
     alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "white",
-  },
-  cardContainer: {
-    marginVertical: 30,
-    flexDirection: "row",
-    borderWidth: 0.5,
-    borderRadius: 12,
-    width: Dimensions.get("window").width * 0.8,
-  },
-  headerContainer: {
-    margin: 20,
+    paddingBottom: 40,
   },
   header: {
     fontSize: 20,
-    fontWeight: "bold",
-  },
-  button: {
-    paddingRight: 20,
+    fontWeight: "600",
+    marginVertical: 16,
+    textAlign: "center",
+    color: "#333",
   },
 });

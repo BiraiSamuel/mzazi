@@ -1,101 +1,92 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View,Platform,Text,SafeAreaView,ScrollView,Dimensions, FlatList } from "react-native";
-import { auth, db } from "../../firebase";
 import {
-  CardOne,
-  CardTwo,
-  CardThree,
-  CardFour,
-  CardFive,
-  CardSix,
-  CardSeven,
-  CardEight,
-  CardNine,
-  CardTen,
-  CardEleven,
-  CardTwelve,
-  CardEcomOne,
-  CardEcomTwo,
-  CardEcomThree,
-  CardEcomFour
-} from "react-native-card-ui";
+  StyleSheet,
+  View,
+  Text,
+  SafeAreaView,
+  FlatList,
+  ActivityIndicator,
+  Dimensions,
+} from "react-native";
+import { auth, db } from "../../firebase";
+import { CardTen } from "react-native-card-ui";
 
-function ConsultationScreen({ navigation }) {
+function ConsultationScreen() {
   const [appointments, setAppointments] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchAppointments();
   }, []);
 
   const fetchAppointments = () => {
-    const appointmentRef = db.ref("appointments/" + auth.currentUser?.uid);
+    const uid = auth?.currentUser?.uid;
+    if (!uid) return;
+
+    const appointmentRef = db.ref(`appointments/${uid}`);
     appointmentRef.on("value", (snapshot) => {
       const data = snapshot.val();
-      data ? setAppointments(Object.values(data)): [];
+      setAppointments(data ? Object.values(data) : []);
+      setLoading(false);
     });
   };
 
-  return (
-    <View style={styles.container}>
-    {appointments != [] ? 
-      <FlatList
-        data={appointments}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item }) => (
-          <CardTen
-          title={item.doctor}
-          subTitle={item.meeting}
-          image={{
-            uri:
-              "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftudungsicomel.com%2Fwp-content%2Fuploads%2F2022%2F08%2Fcara-cuci-uri.png&f=1&nofb=1&ipt=2752f67e1eccd79caa4c7ef1824a810c2653240b56838805abc5d98716f5f74f&ipo=images"
-          }}
-          price={33.5}
-          star={3}
-          starsFor={item.meeting}
-        />
-        )}
-      />
-      :
+  const renderCard = ({ item }) => (
+    <View style={styles.cardWrapper}>
       <CardTen
-            title={"Doctor's Appointment"}
-            subTitle={"Meeting Type"}
-            image={{
-              uri:
-                "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftudungsicomel.com%2Fwp-content%2Fuploads%2F2022%2F08%2Fcara-cuci-uri.png&f=1&nofb=1&ipt=2752f67e1eccd79caa4c7ef1824a810c2653240b56838805abc5d98716f5f74f&ipo=images"
-            }}
-            price={33.5}
-            star={3}
-            starsFor={"240 reviews"}
-    />
-    }
+        title={item.doctor || "Doctor's Name"}
+        subTitle={item.meeting || "Consultation Type"}
+        image={{
+          uri:
+            "https://tudungsicomel.com/wp-content/uploads/2022/08/cara-cuci-uri.png",
+        }}
+        price={33.5}
+        star={3}
+        starsFor={item.meeting || "240 reviews"}
+      />
     </View>
+  );
+
+  return (
+    <SafeAreaView style={styles.safeContainer}>
+      {loading ? (
+        <ActivityIndicator size="large" color="#5DA3FA" />
+      ) : appointments.length > 0 ? (
+        <FlatList
+          data={appointments}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={renderCard}
+          contentContainerStyle={styles.listContent}
+        />
+      ) : (
+        <View style={styles.placeholderContainer}>
+          <Text style={styles.placeholderText}>No consultations scheduled yet.</Text>
+        </View>
+      )}
+    </SafeAreaView>
   );
 }
 
 export default ConsultationScreen;
 
 const styles = StyleSheet.create({
-  container: {
+  safeContainer: {
     flex: 1,
-    alignItems: "center",
+    backgroundColor: "#fff",
+  },
+  listContent: {
+    padding: 16,
+  },
+  cardWrapper: {
+    marginBottom: 20,
+  },
+  placeholderContainer: {
+    flex: 1,
     justifyContent: "center",
-    backgroundColor: "white",
+    alignItems: "center",
   },
-  cardContainer: {
-    marginVertical: 30,
-    flexDirection: "row",
-    borderWidth: 0.5,
-    borderRadius: 12,
-    width: Dimensions.get("window").width * 0.8,
-  },
-  headerContainer: {
-    margin: 20,
-  },
-  header: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  button: {
-    paddingRight: 20,
+  placeholderText: {
+    fontSize: 18,
+    color: "#999",
   },
 });
