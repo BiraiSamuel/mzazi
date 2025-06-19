@@ -7,9 +7,12 @@ import {
   FlatList,
   ActivityIndicator,
   Dimensions,
+  TouchableOpacity,
 } from "react-native";
 import { auth, db } from "../../firebase";
-import { CardTen } from "react-native-card-ui";
+import Card from "../subcomponents/Card";
+import doctors from "../consts/Doctor";
+import moment from "moment";
 
 function ConsultationScreen() {
   const [appointments, setAppointments] = useState([]);
@@ -31,21 +34,37 @@ function ConsultationScreen() {
     });
   };
 
-  const renderCard = ({ item }) => (
-    <View style={styles.cardWrapper}>
-      <CardTen
-        title={item.doctor || "Doctor's Name"}
-        subTitle={item.meeting || "Consultation Type"}
-        image={{
-          uri:
-            "https://tudungsicomel.com/wp-content/uploads/2022/08/cara-cuci-uri.png",
-        }}
-        price={33.5}
-        star={3}
-        starsFor={item.meeting || "240 reviews"}
-      />
-    </View>
-  );
+  const renderCard = ({ item }) => {
+    const [firstName, lastName] = item.doctor.split(" ");
+    const doctor = {
+      firstname: firstName,
+      lastname: lastName || "",
+      specialty: item.meeting,
+    };
+
+    const isUpcoming = moment(item.date).isSameOrAfter(moment(), 'day');
+
+    return (
+      <View style={styles.cardWrapper}>
+        <Card doctor={doctor} index={0} />
+        <View style={styles.badgeContainer}>
+          <Text style={[styles.badge, { backgroundColor: isUpcoming ? '#27ae60' : '#c0392b' }]}> 
+            {isUpcoming ? 'Upcoming' : 'Past'}
+          </Text>
+        </View>
+        <View style={styles.actionContainer}>
+          <TouchableOpacity style={styles.actionButton}>
+            <Text style={styles.actionText}>View Details</Text>
+          </TouchableOpacity>
+          {isUpcoming && (
+            <TouchableOpacity style={styles.actionButton}>
+              <Text style={styles.actionText}>Join Call</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+      </View>
+    );
+  };
 
   return (
     <SafeAreaView style={styles.safeContainer}>
@@ -78,7 +97,41 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   cardWrapper: {
-    marginBottom: 20,
+    marginBottom: 30,
+    borderWidth: 1,
+    borderColor: "#e0e0e0",
+    borderRadius: 10,
+    padding: 10,
+    backgroundColor: "#fff",
+  },
+  badgeContainer: {
+    marginTop: 10,
+    alignSelf: 'flex-start',
+  },
+  badge: {
+    color: "#fff",
+    paddingVertical: 4,
+    paddingHorizontal: 12,
+    borderRadius: 12,
+    overflow: "hidden",
+    fontSize: 13,
+    fontWeight: "bold",
+  },
+  actionContainer: {
+    flexDirection: "row",
+    marginTop: 10,
+    justifyContent: "space-around",
+  },
+  actionButton: {
+    backgroundColor: "#5DA3FA",
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+  },
+  actionText: {
+    color: "#fff",
+    fontWeight: "600",
+    fontSize: 14,
   },
   placeholderContainer: {
     flex: 1,

@@ -1,12 +1,12 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 
-const BabyGrowthCalendar = () => (
+const BabyGrowthCalendar = ({ week = 24, size = "corn cob 🌽", fact = "can hear sounds and respond to your voice" }) => (
   <View style={styles.container}>
-    <Text style={styles.title}>Week 24</Text>
-    <Text style={styles.subtitle}>Your baby is the size of a corn cob 🌽</Text>
+    <Text style={styles.title}>Week {week}</Text>
+    <Text style={styles.subtitle}>Your baby is the size of a {size}</Text>
     <Text style={styles.description}>
-      At this stage, your baby can hear sounds and respond to your voice.
+      At this stage, your baby {fact}.
     </Text>
   </View>
 );

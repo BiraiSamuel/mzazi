@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   View,
@@ -15,11 +15,13 @@ import Headline from "../subcomponents/Headline";
 import CategoryList from "../subcomponents/CategoryList";
 import Card from "../subcomponents/Card";
 import QuickRoute from "../subcomponents/QuickRoute";
-import BabyGrowthCalendar from "../subcomponents/BabyGrowthCalendar"; // 🍼 NEW
-import DailyInsightCard from "../subcomponents/DailyInsightCard";     // 🌞 NEW
-import NewsCard from "../subcomponents/NewsCard";                     // 📰 NEW
+import BabyGrowthCalendar from "../subcomponents/BabyGrowthCalendar";
+import DailyInsightCard from "../subcomponents/DailyInsightCard";
+import NewsCard from "../subcomponents/NewsCard";
 import doctors from "../consts/Doctor";
 import pageImages from "../consts/PageImages";
+import { db, auth } from "../../firebase";
+import moment from "moment";
 
 const { width } = Dimensions.get("screen");
 const CARD_WIDTH = width * 0.6;
@@ -27,6 +29,37 @@ const CARD_WIDTH = width * 0.6;
 export default function HomeScreen({ navigation }) {
   const [search, setSearch] = useState("");
   const [filteredDoctors, setFilteredDoctors] = useState(doctors);
+  const [dueDate, setDueDate] = useState(null);
+  const [pregnancyWeek, setPregnancyWeek] = useState(null);
+  const [weeklyNews, setWeeklyNews] = useState([]);
+
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      const user = auth.currentUser;
+      if (user) {
+        const snapshot = await db.ref("users/" + user.uid).once("value");
+        const userData = snapshot.val();
+
+        if (userData?.lmp) {
+          const lmpDate = moment(userData.lmp);
+          const estimatedDue = lmpDate.clone().add(280, "days");
+          setDueDate(estimatedDue.format("YYYY-MM-DD"));
+
+          const weeks = moment().diff(lmpDate, "weeks");
+          setPregnancyWeek(weeks);
+
+          setWeeklyNews([
+            { id: "1", headline: `Week ${weeks}: Baby milestone update` },
+            { id: "2", headline: `Nutrition Tip: Add more iron-rich foods like spinach & beans.` },
+            { id: "3", headline: `Emotional Wellness: Take 10 minutes to rest and reflect.` },
+            { id: "4", headline: `Development Update: Baby's ${weeks}-week milestone inside.` },
+          ]);
+        }
+      }
+    };
+
+    fetchUserDetails();
+  }, []);
 
   const handleSearch = (text) => {
     setSearch(text);
@@ -70,12 +103,6 @@ export default function HomeScreen({ navigation }) {
     { id: "3", title: "Kick Counter", text: "Monitor baby's movements today." },
   ];
 
-  const weeklyNews = [
-    { id: "1", headline: "Week 24: Your Baby Can Hear Sounds!" },
-    { id: "2", headline: "Gestational Diabetes Explained" },
-    { id: "3", headline: "Nesting Instinct: What It Means" },
-  ];
-
   return (
     <KeyboardAvoidingView
       style={styles.container}
@@ -84,10 +111,22 @@ export default function HomeScreen({ navigation }) {
       <Headline />
 
       <ScrollView showsVerticalScrollIndicator={false}>
-        {/* 🍼 Baby Growth Calendar */}
-        <BabyGrowthCalendar />
+        <BabyGrowthCalendar
+          week={pregnancyWeek}
+          size="mango 🥭"
+          fact="is developing lungs and fingerprints"
+        />
 
-        {/* 🧠 Daily Insights */}
+        {pregnancyWeek !== null && (
+          <View style={styles.pregnancyInfo}>
+            <Text style={styles.sectionTitle}>Pregnancy Tracker</Text>
+            <Text style={styles.pregnancyText}>
+              You are currently in week {pregnancyWeek} of your pregnancy.
+            </Text>
+            <Text style={styles.pregnancyText}>Estimated Due Date: {dueDate}</Text>
+          </View>
+        )}
+
         <Text style={styles.sectionTitle}>Daily Insights</Text>
         <FlatList
           horizontal
@@ -98,7 +137,6 @@ export default function HomeScreen({ navigation }) {
           contentContainerStyle={styles.horizontalList}
         />
 
-        {/* 🔎 Search */}
         <View style={styles.header}>
           <Text style={styles.headerTitle}>Find your Mzazi doctor here</Text>
         </View>
@@ -114,10 +152,8 @@ export default function HomeScreen({ navigation }) {
           lightTheme
         />
 
-        {/* 📂 Categories */}
         <CategoryList />
 
-        {/* 👩‍⚕️ Doctor Cards */}
         <Text style={styles.sectionTitle}>Doctors</Text>
         {filteredDoctors.length > 0 ? (
           <FlatList
@@ -136,7 +172,6 @@ export default function HomeScreen({ navigation }) {
           </View>
         )}
 
-        {/* ⚡ Quick Navigation */}
         <Text style={styles.sectionTitle}>Quick Access</Text>
         <FlatList
           data={pageImages}
@@ -147,7 +182,6 @@ export default function HomeScreen({ navigation }) {
           contentContainerStyle={styles.horizontalList}
         />
 
-        {/* 📰 Weekly Round-Up */}
         <Text style={styles.sectionTitle}>This Week’s Round-Up</Text>
         {weeklyNews.map((item) => (
           <NewsCard key={item.id} headline={item.headline} />
@@ -189,6 +223,15 @@ const styles = StyleSheet.create({
     color: "#34495e",
     paddingHorizontal: 20,
     marginTop: 20,
+  },
+  pregnancyInfo: {
+    paddingHorizontal: 20,
+    paddingTop: 10,
+  },
+  pregnancyText: {
+    fontSize: 16,
+    color: "#2d3436",
+    marginTop: 5,
   },
   horizontalList: {
     paddingLeft: 20,

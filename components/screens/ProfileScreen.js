@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -7,15 +7,46 @@ import {
   TouchableOpacity,
   Image,
   SafeAreaView,
+  TextInput,
+  Alert,
 } from "react-native";
 import { Button } from "react-native-elements";
-import { auth } from "../../firebase";
+import { auth, db } from "../../firebase";
 
 export default function ProfileScreen({ navigation }) {
+  const [userData, setUserData] = useState({});
+  const [editing, setEditing] = useState(false);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const user = auth.currentUser;
+      if (user) {
+        const snapshot = await db.ref("users/" + user.uid).once("value");
+        const data = snapshot.val();
+        setUserData(data || {});
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
   const handleSignOut = () => {
     auth
       .signOut()
       .then(() => navigation.navigate("LoginScreen"))
+      .catch((err) => alert(err.message));
+  };
+
+  const handleUpdate = () => {
+    const uid = auth?.currentUser?.uid;
+    if (!uid) return;
+
+    db.ref("users/" + uid)
+      .update(userData)
+      .then(() => {
+        setEditing(false);
+        Alert.alert("Success", "Your profile has been updated successfully.");
+      })
       .catch((err) => alert(err.message));
   };
 
@@ -33,32 +64,37 @@ export default function ProfileScreen({ navigation }) {
             }}
             style={styles.profileImage}
           />
-          <Text style={styles.profileName}>
-            {auth.currentUser?.email || "Anonymous"}
-          </Text>
-          <Text style={styles.profileSubtitle}>Pregnancy Stage: 2nd Trimester</Text>
+          <Text style={styles.profileName}>{userData.fullName || "Anonymous"}</Text>
+          <Text style={styles.profileSubtitle}>Pregnancy Status: {userData.status || "N/A"}</Text>
         </View>
 
         <View style={styles.sectionCard}>
           <Text style={styles.sectionTitle}>📋 Personal Info</Text>
+          {renderEditableRow("Full Name", "fullName", userData, setUserData, editing)}
+          {renderEditableRow("Phone", "phone", userData, setUserData, editing)}
+          {renderEditableRow("Pregnancy Status", "status", userData, setUserData, editing)}
+          {renderEditableRow("Last Menstrual Period (LMP)", "lmp", userData, setUserData, editing)}
           {renderInfoRow("Email", auth.currentUser?.email)}
-          {renderInfoRow("Age Group", "20-30 years")}
-          {renderInfoRow("Gender", "Female")}
-          {renderInfoRow("Joined", "March 4, 2023")}
-          {renderInfoRow("Location", "Alger, Canada")}
+          {renderInfoRow("Account Created", userData.createdAt)}
         </View>
 
-        <View style={styles.sectionCard}>
-          <Text style={styles.sectionTitle}>⭐ Reviews</Text>
-          <View style={styles.ratingRow}>
-            {Array.from({ length: 5 }).map((_, i) => (
-              <Text key={i} style={styles.star}>
-                {i < 3 ? "★" : "☆"}
-              </Text>
-            ))}
-            <Text style={styles.reviewText}> (240 reviews)</Text>
-          </View>
-        </View>
+        {editing ? (
+          <Button
+            title="Save Changes"
+            onPress={handleUpdate}
+            buttonStyle={styles.editButton}
+            titleStyle={styles.logoutButtonTitle}
+            containerStyle={styles.logoutButtonContainer}
+          />
+        ) : (
+          <Button
+            title="Edit Profile"
+            onPress={() => setEditing(true)}
+            buttonStyle={styles.editButton}
+            titleStyle={styles.logoutButtonTitle}
+            containerStyle={styles.logoutButtonContainer}
+          />
+        )}
 
         <Button
           title="Log Out"
@@ -77,6 +113,23 @@ function renderInfoRow(label, value) {
     <View style={styles.infoRow}>
       <Text style={styles.infoLabel}>{label}</Text>
       <Text style={styles.infoValue}>{value || "—"}</Text>
+    </View>
+  );
+}
+
+function renderEditableRow(label, key, userData, setUserData, editing) {
+  return (
+    <View style={styles.infoRow}>
+      <Text style={styles.infoLabel}>{label}</Text>
+      {editing ? (
+        <TextInput
+          style={styles.editInput}
+          value={userData[key] || ""}
+          onChangeText={(text) => setUserData({ ...userData, [key]: text })}
+        />
+      ) : (
+        <Text style={styles.infoValue}>{userData[key] || "—"}</Text>
+      )}
     </View>
   );
 }
@@ -147,14 +200,26 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     marginBottom: 10,
+    alignItems: "center",
   },
   infoLabel: {
     fontSize: 16,
     color: "#95A5A6",
+    width: "50%",
   },
   infoValue: {
     fontSize: 16,
     color: "#2C3E50",
+    width: "50%",
+    textAlign: "right",
+  },
+  editInput: {
+    fontSize: 16,
+    color: "#2C3E50",
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
+    width: "50%",
+    textAlign: "right",
   },
   ratingRow: {
     flexDirection: "row",
@@ -173,6 +238,11 @@ const styles = StyleSheet.create({
   logoutButton: {
     backgroundColor: "#FF6B6B",
     borderRadius: 10,
+  },
+  editButton: {
+    backgroundColor: "#5DA3FA",
+    borderRadius: 10,
+    marginBottom: 10,
   },
   logoutButtonTitle: {
     fontSize: 16,

@@ -1,46 +1,49 @@
-import { StyleSheet, Text, View, TextInput } from "react-native";
+import { Text, StyleSheet, View, TextInput } from "react-native";
 import React, { useState } from "react";
 import { Button } from "react-native-elements";
-import { auth } from "../../firebase";
+import { auth, db } from "../../firebase";
 
 const SignUpScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [lmp, setLMP] = useState(""); // Last Menstrual Period
+  const [status, setStatus] = useState(""); // Pregnant or Postpartum
 
   const handleSignUp = () => {
     auth
       .createUserWithEmailAndPassword(email, password)
       .then((userCredentials) => {
         const user = userCredentials.user;
-        console.log("Register new user: ", user.email);
-        navigateLogin();
+        console.log("Registered new user:", user.email);
+
+        db.ref("users/" + user.uid).set({
+          fullName,
+          phone,
+          email,
+          lmp,
+          status,
+          createdAt: new Date().toISOString(),
+        });
+
+        navigation.navigate("LoginScreen");
       })
       .catch((error) => alert(error.message));
   };
 
-  const navigateLogin = () => {
-    navigation.navigate("LoginScreen");
-  };
-
   return (
     <View style={styles.container}>
-      <View>
-        <Text style={styles.greeting}>Register your account!</Text>
-      </View>
+      <Text style={styles.greeting}>Register your account!</Text>
+
       <View style={styles.inputContainer}>
-        <TextInput
-          placeholder="Email"
-          style={styles.input}
-          value={email}
-          onChangeText={(text) => setEmail(text)}
-        />
-        <TextInput
-          placeholder="Password"
-          style={styles.input}
-          secureTextEntry
-          value={password}
-          onChangeText={(text) => setPassword(text)}
-        />
+        <TextInput placeholder="Full Name" style={styles.input} value={fullName} onChangeText={setFullName} />
+        <TextInput placeholder="Phone Number" style={styles.input} value={phone} onChangeText={setPhone} keyboardType="phone-pad" />
+        <TextInput placeholder="LMP (YYYY-MM-DD)" style={styles.input} value={lmp} onChangeText={setLMP} />
+        <TextInput placeholder="Status (Pregnant/Postpartum)" style={styles.input} value={status} onChangeText={setStatus} />
+
+        <TextInput placeholder="Email" style={styles.input} value={email} onChangeText={setEmail} />
+        <TextInput placeholder="Password" style={styles.input} secureTextEntry value={password} onChangeText={setPassword} />
       </View>
 
       <View style={styles.buttonContainer}>
@@ -51,14 +54,10 @@ const SignUpScreen = ({ navigation }) => {
           title="Register"
           titleStyle={styles.buttonOutlineText}
         />
+
         <View style={styles.textContainer}>
-          <Text>Already have account?</Text>
-          <Button
-            type="clear"
-            title="Log In"
-            titleStyle={styles.text}
-            onPress={navigateLogin}
-          />
+          <Text>Already have an account?</Text>
+          <Button type="clear" title="Log In" titleStyle={styles.text} onPress={() => navigation.navigate("LoginScreen")} />
         </View>
       </View>
     </View>
