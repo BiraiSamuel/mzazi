@@ -13,9 +13,16 @@ Mobile application project created with Expo, React Native, Firebase and some wo
 
 This Doctor Mobile application allows customers to create their account for health checking and book an appointment with their desired doctors.
 
+### Register
+
+<p flexDirection="row">
+<img src="resources.png" width="300" height="600" />
+</p>
+
 ### Home Screen
 
 <p flexDirection="row">
+<img src="hero.png" width="300" height="600" />
 <img src="./components/assets/HomeScreenProduct.png" width="300" height="600" />
 <img src="./components/assets/FilterScreenProduct.png" width="300" height="600" />
 </p>
@@ -26,6 +33,74 @@ This Doctor Mobile application allows customers to create their account for heal
 <img src="./components/assets/BookAppointmentProduct.png" width="300" height="600" />
 <img src="./components/assets/DoctorInfo.png" width="300" height="600" />
 </p>
+
+### Resources
+
+<p flexDirection="row">
+<img src="resources.png" width="300" height="600" />
+</p>
+
+### Voice Assistance
+
+<p flexDirection="row">
+<img src="voice_assistAI.png" width="300" height="600" />
+</p>
+
+### Consultations
+
+<p flexDirection="row">
+<img src="consultations.png" width="300" height="600" />
+</p>
+
+### Profile
+
+<p flexDirection="row">
+<img src="profile.png" width="300" height="600" />
+</p>
+🚀 Mzazi App – Main Features
+
+Mzazi is a smart healthcare and parental support app built with intuitive navigation and modern tools to simplify consultations and appointments.
+🔐 Authentication & User Management
+
+    Secure Firebase Authentication
+
+    Email/password sign up, login, and logout
+
+    Real-time session management
+
+🧭 Navigation System
+
+    Advanced navigation with:
+
+        Tab Navigation
+
+        Stack Navigation
+
+        TabView for fluid screen switching
+
+    Responsive UI optimized for mobile devices
+
+🗓️ Doctor Search & Appointment Booking
+
+    Search doctors by First Name or Last Name
+
+    Book appointments with preferred time slot
+
+    Choose from 3 meeting options:
+
+        📞 Audio Chat
+
+        🎥 Video Call
+
+        🏥 In-Person Meeting
+
+    View and manage bookings in the Appointments Screen
+
+🧠 Smart Consultation Tools
+
+    Speech-to-Text feature for voice-based consultation entry
+
+    Date utilities to retrieve and format the current date automatically
 
 ## Main Features
 
@@ -51,6 +126,7 @@ This Doctor Mobile application allows customers to create their account for heal
 - Firebase Authentication V8
 - Firebase Realtime Database
 - React Native Android Voice
+- React Native Text to Speech
 
 ## Quick Start
 
