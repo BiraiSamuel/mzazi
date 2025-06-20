@@ -16,13 +16,13 @@ This Doctor Mobile application allows customers to create their account for heal
 ### Register
 
 <p flexDirection="row">
-<img src="resources.png" width="300" height="600" />
+<img src="register.png" width="2208" height="1840" />
 </p>
 
 ### Home Screen
 
 <p flexDirection="row">
-<img src="hero.png" width="300" height="600" />
+<img src="hero.png" width="2208" height="1840" />
 <img src="./components/assets/HomeScreenProduct.png" width="300" height="600" />
 <img src="./components/assets/FilterScreenProduct.png" width="300" height="600" />
 </p>
@@ -37,25 +37,25 @@ This Doctor Mobile application allows customers to create their account for heal
 ### Resources
 
 <p flexDirection="row">
-<img src="resources.png" width="300" height="600" />
+<img src="resources.png" width="2208" height="1840" />
 </p>
 
 ### Voice Assistance
 
 <p flexDirection="row">
-<img src="voice_assistAI.png" width="300" height="600" />
+<img src="voice_assistAI.png" width="2208" height="1840" />
 </p>
 
 ### Consultations
 
 <p flexDirection="row">
-<img src="consultations.png" width="300" height="600" />
+<img src="consultations.png" width="2208" height="1840" />
 </p>
 
 ### Profile
 
 <p flexDirection="row">
-<img src="profile.png" width="300" height="600" />
+<img src="profile.png" width="2208" height="1840" />
 </p>
 🚀 Mzazi App – Main Features
 
@@ -101,8 +101,6 @@ Mzazi is a smart healthcare and parental support app built with intuitive naviga
     Speech-to-Text feature for voice-based consultation entry
 
     Date utilities to retrieve and format the current date automatically
-
-## Main Features
 
 - Complex navigation (Tab, Stack, TabView)
 - Connect to Firebase (Authentication)
