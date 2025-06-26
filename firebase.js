@@ -6,16 +6,28 @@ import "firebase/database";
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+
 const firebaseConfig = {
-  apiKey: "AIzaSyBYSBmyqSfHH5MosKbiAxAWPx2Wk7PgN0I",
-  authDomain: "doctor-mobile-app-ba1ef.firebaseapp.com",
-  databaseURL:
-    "https://doctor-mobile-app-ba1ef-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "doctor-mobile-app-ba1ef",
-  storageBucket: "doctor-mobile-app-ba1ef.appspot.com",
-  messagingSenderId: "510646349622",
-  appId: "1:510646349622:web:f247642fa25f2795bccd97",
+
+  apiKey: "AIzaSyDWKfpYxMXqXUQLDfjk7c3J5UxZx6_t4vQ",
+
+  authDomain: "mzazi-5c344.firebaseapp.com",
+
+  databaseURL: "https://mzazi-5c344-default-rtdb.firebaseio.com",
+
+  projectId: "mzazi-5c344",
+
+  storageBucket: "mzazi-5c344.firebasestorage.app",
+
+  messagingSenderId: "156463252297",
+
+  appId: "1:156463252297:web:922a5264673f78240d9098",
+
+  measurementId: "G-MZXGGM8SZE"
+
 };
+
 
 // Initialize Firebase
 const app = firebase.initializeApp(firebaseConfig);
